@@ -61,7 +61,7 @@ rec_categorical_radius = .0001
 # to run locally, set the sample span to be 5k or less
 # always start after 2 to remove "state" label
 cross_recurrence_analysis = crqa(ts1=sound_data[2:5001],
-                                 ts2=sound_data_contrast[2:5001],
+                                 ts2=sound_data[2:5001],
                                  delay=0,
                                  embed=1,
                                  rescale=0,
