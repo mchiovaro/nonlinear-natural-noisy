@@ -50,7 +50,7 @@ ggsave(TS, file = "./results/catRQA/TS_catRQA.png")
 ##### Recurrence parameter setting #####
 
 # decide Theiler window parameter
-theiler_window = 0
+theiler_window = 1
 
 # set radius to be very small for categorical matches
 rec_categorical_radius = .0001
