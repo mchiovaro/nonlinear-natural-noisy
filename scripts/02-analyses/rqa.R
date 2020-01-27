@@ -1,14 +1,13 @@
 ##### Categorical Recurrence Quantification Analysis #####
 #
-# This code stems from the presentation: "Nonlinear, 
-# Natural, and Noisy: A Quantitative Approach to the 
-# Collection and Analysis of Real-World Social Behavior"
+# Code by: M. Chiovaro and A. Paxton
+# University of Connecticut
 #
-# Presented at the 49th Annual Meeting of the Society for
-# Computers in Psychology (SCiP) (Montréal, Québec, Canada)
-# 
-# By: M. Chiovaro (@mchiovaro) and A. Paxton (@a-paxton)
-# Univeristy of Connecticut
+# Accompanying manuscript:
+# "Nonlinear, Natural, and Noisy: A Quantitative Approach to
+# the Collection and Analysis of Real-World Social Behavior"
+#
+##### Last updated: Jan. 27, 2020 #####
 
 #================
 ##### Setup #####
@@ -18,30 +17,30 @@
 setwd("./nonlinear-natural-noisy/")
 
 # check that we have needed libraries
-source('./scripts/required_packages.R')
+source('./scripts/required_packages-nonlinear_natural_noisy.R')
 
 # load libraries
 library(dplyr)
 library(crqa) 
 library(ggplot2) 
 
-# Reading in data
-sound_data = read.table('./data/sound_data.txt', 
-                        sep="\t") %>% .$V2
-sound_data_contrast = read.table('./data/sound_data_contrast.txt', 
-                                 sep="\t") %>% .$V2
+# Reading in data and keep only the time series
+sound_data = read.table('./data/formatted/sound_data.txt', 
+                        sep="\t",
+                        header = TRUE) %>% .$V2
 
-# Plot time-series (starting at 2 to remove the "state" label)
-TS <- qplot(sound_data[2:length(sound_data)],
-      x=seq_along(sound_data[2:length(sound_data)]), geom="point") +
+# Plot the time series 
+TS <- qplot(sound_data,
+      x=seq_along(sound_data), geom="point") +
       geom_path() +
-      theme(legend.position="none", axis.text.x = element_blank(),
-      axis.text.y = element_blank()) +
+      theme(legend.position="none", 
+            axis.text.x = element_blank(),
+            axis.text.y = element_blank()) +
       xlab("Time (ms)") + ylab("Sound state") +
       ggtitle("On-Off Sound Signal")
 
 # save the TS plot
-ggsave(TS, file = "./results/catRQA/TS_catRQA.png")
+ggsave(TS, file = "./results/rqa/time_series_rqa.png")
 
 #==========================
 ##### Categorical RQA #####
@@ -49,7 +48,9 @@ ggsave(TS, file = "./results/catRQA/TS_catRQA.png")
 
 ##### Recurrence parameter setting #####
 
-# decide Theiler window parameter
+# decide Theiler window (tw) parameter
+# for categorical RQA, a tw of 1 will remove the line of 
+# identity from the analysis
 theiler_window = 1
 
 # set radius to be very small for categorical matches
@@ -59,9 +60,8 @@ rec_categorical_radius = .0001
 
 # run cross recurrence over each
 # to run locally, set the sample span to be 5k or less
-# always start after 2 to remove "state" label
-cross_recurrence_analysis = crqa(ts1=sound_data[2:5001],
-                                 ts2=sound_data[2:5001],
+cross_recurrence_analysis = crqa(ts1=sound_data[1:5000],
+                                 ts2=sound_data[1:5000],
                                  delay=0,
                                  embed=1,
                                  rescale=0,
@@ -72,8 +72,8 @@ cross_recurrence_analysis = crqa(ts1=sound_data[2:5001],
                                  tw=theiler_window)
 
 # save the crqa results
-catRQA_results <- data.frame(c(cross_recurrence_analysis[1:9]))
-write.table(catRQA_results,'./results/catRQA/catRQA_results.csv',
+rqa_results <- data.frame(c(cross_recurrence_analysis[1:9]))
+write.table(rqa_results,'./results/rqa/rqa_results.csv',
             sep=",", row.names=FALSE)
 
 ##### Create the recurrence plot (CRP) #####
@@ -95,7 +95,7 @@ CRP <- ggplot(cross_rec_df,aes(x=points,
             analysis")
 
 # use standard plot function to generate and save the recurrence plot
-png(filename='./results/catRQA/CRP_catRQA.png')
+png(filename='./results/rqa/CRP_rqa.png')
 plot(cross_recurrence_analysis$RP@i,
   type='p',cex=.05, xlab = "On/Off Time Series", ylab="On/Off Time Series")
 dev.off()

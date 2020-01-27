@@ -1,14 +1,13 @@
 ####### Detrended Fluctuation Analysis #######
 #
-# This code stems from the presentation: "Nonlinear, 
-# Natural, and Noisy: A Quantitative Approach to the 
-# Collection and Analysis of Real-World Social Behavior"
+# Code by: M. Chiovaro and A. Paxton
+# University of Connecticut
 #
-# Presented at the 49th Annual Meeting of the Society for
-# Computers in Psychology (SCiP) (Montréal, Québec, Canada)
-# 
-# By: M. Chiovaro (@mchiovaro) and A. Paxton (@a-paxton)
-# Univeristy of Connecticut
+# Accompanying manuscript:
+# "Nonlinear, Natural, and Noisy: A Quantitative Approach to
+# the Collection and Analysis of Real-World Social Behavior"
+#
+##### Last updated: Jan. 27, 2020 #####
 
 #================
 ##### Setup #####
@@ -18,7 +17,7 @@
 setwd("./nonlinear-natural-noisy/")
 
 # check that we have needed libraries
-source('./scripts/required_packages.R')
+source('./scripts/required_packages-nonlinear_natural_noisy.R')
 
 # load the required libraries
 library(dplyr)
@@ -26,7 +25,7 @@ library(ggplot2)
 library(nonlinearTseries)
 
 # Reading in fractal data
-data = read.csv('./data/fractal_data.csv', 
+data = read.csv('./data/fractal_sound_trunc.csv', 
                 sep=",")
 
 #======================================
@@ -37,11 +36,11 @@ data = read.csv('./data/fractal_data.csv',
 dfa_results_td = nonlinearTseries::dfa(data$turn_duration,
                                        window.size.range = c(10,floor(length(data$turn_duration)/2)))
 
-# get H value
+# get Hurst exponent (H) value
 observed_H_td = unname(lm(log(dfa_results_td$fluctuation.function) ~ log(dfa_results_td$window.sizes))$coefficients[2])
 
 # calculate td DFA and save plot
-png(filename='./results/fractal/full/dfa_td_plot.png', 
+png(filename='./results/dfa/dfa_td_plot.png', 
     height=1600, width=1600, res=400)
 estimate(dfa_results_td, do.plot = TRUE,
          add.legend=F, main="DFA on Turn Duration\n(Full)")
@@ -49,8 +48,8 @@ dev.off()
 
 # save results
 dfa_td_frame = data.frame(observed_H = observed_H_td)
-write.table(dfa_td_frame,'./results/fractal/full/dfa_td_frame.csv',
-            sep=",", row.names=FALSE)
+write.table(dfa_td_frame,'./results/dfa/dfa_td_H.csv',
+            sep=",", row.names=FALSE) 
 
 #==============================================
 ##### Inter-onset-interval analysis (ioi) #####
@@ -65,16 +64,16 @@ dfa_results_ioi = nonlinearTseries::dfa(data_ioi,
 
 
 # calculate ioi DFA and save plot
-png(filename='./results/fractal/full/dfa_ioi_plot.png', 
+png(filename='./results/dfa/dfa_ioi_plot.png', 
     height=1600, width=1600, res=400)
 estimate(dfa_results_ioi, do.plot = TRUE,
          add.legend=F, main="DFA on Inter-Onset-Intervals\n(Full)")
 dev.off()
 
-# get H value
+# get Hurst exponent (H) value
 observed_H_ioi = unname(lm(log(dfa_results_ioi$fluctuation.function) ~ log(dfa_results_ioi$window.sizes))$coefficients[2])
 
 # save results
 dfa_ioi_frame = data.frame(observed_H = observed_H_ioi)
-write.table(dfa_ioi_frame,'./results/fractal/full/dfa_ioi_frame.csv',
+write.table(dfa_ioi_frame,'./results/dfa/dfa_ioi_H.csv',
             sep=",", row.names=FALSE)
