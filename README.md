@@ -2,7 +2,7 @@
 
 This repository contains the necessary code and tools to begin using categorical recurrence quantification analysis and fractal analysis (detrended fluctuation analysis).
 
-Accompanying manuscript: Chiovaro, M., & Paxton, A. (/*under review*/). Nonlinear, Natural, and Noisy: A Quantitative Approach to the Collection and Analysis of Real-World Social Behavior.
+Accompanying manuscript: Chiovaro, M., & Paxton, A. (*under review*). Nonlinear, Natural, and Noisy: A Quantitative Approach to the Collection and Analysis of Real-World Social Behavior.
 
 Presented at: The 49th Annual Meeting of the Society for Computers in Psychology (SCiP) (Montréal, Québec, Canada)
 
