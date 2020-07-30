@@ -14,7 +14,7 @@
 # the appropriate format.
 
 # set working directory
-setwd("./nonlinear_natural_noisy/")
+setwd("./nonlinear-natural-noisy/")
 
 # check that we have needed libraries installed
 source('./scripts/required_packages-nonlinear_natural_noisy.R')
